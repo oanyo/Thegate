@@ -1,0 +1,4530 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<title>チャットログ</title>
+	<style>
+        html {
+            font-size: 14px;
+        }
+
+        body {
+            -webkit-text-size-adjust: 100%;
+            background-color: #ffffff;
+        }
+
+        .player {
+            padding: 1rem;
+            top: -0.5rem;
+            /* 대사가 시작되는 위치입니다. player b의 width와 같은 값을 넣어주세요. */
+            padding-left: 12rem;
+            line-height: 30px;
+            border-color: inherit;
+            position: relative;
+        }
+
+            .player b {
+                display: block;
+                height: 100%;
+                /* 캐릭터의 이름길이에 맞게 width를 조정해주세요. */
+                width: 12rem;
+                padding: 1rem;
+                position: absolute;
+                top: -0.2rem;
+                left: 0.2rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+        .diceroll {
+            padding: 1em;
+            color: #ffffff;
+        }
+
+        img {
+            vertical-align: middle;
+            width: 25px;
+        }
+		.tab {
+			margin: 4rem 2rem 2rem;
+			line-height: 3;
+			position: relative;
+		}
+		.tabtitle {
+			border: 1px solid transparent;
+			border-color: inherit;
+			background-color: inherit;
+			position: absolute;
+			top: -1.55rem;
+			left: 0.5rem;
+			min-width: 7rem;
+			padding: 0 .5rem;
+			text-align: center;
+			font-size: 1rem;
+			z-index: 9999;
+			line-height: 1.4rem;
+		}
+		.player {
+			margin: 0;
+			padding: 0.8rem;
+			padding-left: 10.5rem;
+			//border-bottom: 1px dotted transparent;
+			//border-color: inherit;
+			position: relative;
+		}
+		.player:last-child {
+			border-bottom: 0;
+		}
+		.player b {
+			display: block;
+			height: 100%;
+			width: 9rem;
+			padding: 0.8rem;
+			//border-right: 1px solid transparent;
+			//border-color: inherit;
+			position: absolute;
+			top: 0;
+			left: 0;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		.diceroll {
+			padding: 0 .5em;
+			color: #ffffff;
+		}
+
+		/* [メイン] タブ */
+		.t0 {
+			background-color: #ffffff;
+			border-color: #999999;
+			color: #000000;
+		}
+
+		/* [메인] タブ */
+		.t1 {
+			background-color: #ffffff;
+			border-color: #999999;
+			color: #000000;
+		}
+
+		/* [잡담] タブ */
+		.t2 {
+			background-color: #ffffff;
+			border-color: #999999;
+			color: #000000;
+			font-size: .8rem;
+		}
+
+		/* [비밀(안녕요,익명 사..)] タブ */
+		.t3 {
+			background-color: #ffffff;
+			border-color: #999999;
+			color: #000000;
+			font-size: .8rem;
+		}
+
+		/* [비밀(안녕요,익명)] タブ */
+		.t4 {
+			background-color: #ffffff;
+			border-color: #999999;
+			color: #000000;
+			font-size: .8rem;
+		}
+
+		/* 発言者：진저 버틀러 */
+		.p0 { color: #888888; }
+		.p0 .diceroll { background-color: #888888; }
+
+		/* 発言者：서하빈 */
+		.p1 { color: #9c27b0; }
+		.p1 .diceroll { background-color: #9c27b0; }
+
+		/* 発言者：서하빈일반인여친 */
+		.p2 { color: #888888; }
+		.p2 .diceroll { background-color: #888888; }
+
+		/* 発言者：디엣 */
+		.p3 { color: #673ab7; }
+		.p3 .diceroll { background-color: #673ab7; }
+
+		/* 発言者：다찬이 일반인 여친 */
+		.p4 { color: #888888; }
+		.p4 .diceroll { background-color: #888888; }
+
+		/* 発言者：안다찬 */
+		.p5 { color: #8bc34a; }
+		.p5 .diceroll { background-color: #8bc34a; }
+
+		/* 発言者：GM */
+		.p6 { color: #e91e63; }
+		.p6 .diceroll { background-color: #e91e63; }
+
+		/* 発言者：다찬이 소꿉친구에서 여친된 일반인 */
+		.p7 { color: #9c27b0; }
+		.p7 .diceroll { background-color: #9c27b0; }
+
+		/* 発言者：noname */
+		.p8 { color: #888888; }
+		.p8 .diceroll { background-color: #888888; }
+
+		/* 発言者：차윤영 */
+		.p9 { color: #b0b0db; }
+		.p9 .diceroll { background-color: #b0b0db; }
+
+		/* 発言者：센하 */
+		.p10 { color: #888888; }
+		.p10 .diceroll { background-color: #888888; }
+
+		/* 発言者：유지나 */
+		.p11 { color: #ee87b4; }
+		.p11 .diceroll { background-color: #ee87b4; }
+
+		/* 発言者：◆ */
+		.p12 { color: #e91e63; }
+		.p12 .diceroll { background-color: #e91e63; }
+
+		/* 発言者：윤재현 */
+		.p13 { color: #c2b697; }
+		.p13 .diceroll { background-color: #c2b697; }
+
+		/* 発言者：서.일.녀 */
+		.p14 { color: #ff5722; }
+		.p14 .diceroll { background-color: #ff5722; }
+
+		/* 発言者：A */
+		.p15 { color: #888888; }
+		.p15 .diceroll { background-color: #888888; }
+
+		/* 発言者：B */
+		.p16 { color: #888888; }
+		.p16 .diceroll { background-color: #888888; }
+
+		/* 発言者：직원 */
+		.p17 { color: #888888; }
+		.p17 .diceroll { background-color: #888888; }
+
+		/* 発言者：NPC 헌터 A */
+		.p18 { color: #888888; }
+		.p18 .diceroll { background-color: #888888; }
+
+		/* 発言者：NPC 협회장 */
+		.p19 { color: #888888; }
+		.p19 .diceroll { background-color: #888888; }
+
+		/* 発言者：system */
+		.p20 { color: #888888; }
+		.p20 .diceroll { background-color: #888888; }
+
+		/* 発言者：NPC INBS 기자 */
+		.p21 { color: #9e9e9e; }
+		.p21 .diceroll { background-color: #9e9e9e; }
+
+		/* 発言者：NPC 헌터 협회 직원 */
+		.p22 { color: #888888; }
+		.p22 .diceroll { background-color: #888888; }
+
+		/* 発言者：등급 측정 장치 2 */
+		.p23 { color: #888888; }
+		.p23 .diceroll { background-color: #888888; }
+
+		/* 発言者：등급 측정 장치 */
+		.p24 { color: #888888; }
+		.p24 .diceroll { background-color: #888888; }
+
+	</style>
+</head>
+<body>
+    <div class="t0">
+        <h2 align="center">국가헌터등급시험</h2>
+        <h3 align="center">GM : 안녕요</h3>
+        <h3 align="center">PC : 안다찬, 서하빈, 차윤영, 유지나</h3>
+    </div>
+
+	<div class="tab t1">
+		<p class="player p12">
+			<b>◆</b>
+			---------------------------------------------------<br>
+			더게이트 : 국가 헌터 등급 시험 안내<br>
+			◈◆◈◆ 도입 페이즈 ◈◆◈◆<br>
+			등장 : 안다찬<br>
+			운명의 날로부터 몇 개월이 지났습니다.<br>
+			능력 있는 헌터들의 활약으로 게이트들 에 대한 관리가 점차 안정적으로 변하고 다행히 국가체제가 거의 정상으로 돌아 가게 되었습니다.<br>
+			이에 대해 연일 뉴스에서는 국가에 대한 찬양과 함께 이에 앞장선 「헌터협회」와 협회장의 업적에 대한 칭송이 끊이질 않습니다.<br>
+			오늘 아침 뉴스에는 오늘 시행될 국가 헌터 등급 시험에 대한 이야기가 한창입니다.<br>
+			그동안 헌터들이 자체적으로 제출 한 자신의 등급과 스펙에 의존하였으나,<br>
+			이번 시험을 통해 공인된 능력치를 확인 하게 되고 이 시험이 모두 끝나면<br>
+			헌터들이 좀 더 안정적으로 활동할 수 있으며 이에 따라 시민들의 안전 역시 더욱 견고해질 것이라 이야기합니다.<br>
+			헌터 전용 통신기 역시 개발이 끝나 지급될 예정이라고 하네요.<br>
+			안다찬은 그 뉴스를 들으며 집에서 나섭니다.<br>
+			여기서! 안다찬의 자기소개 한 번 해볼까요
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			(내이름은.. 안다찬)<br>
+			(올해로 24살, 직업은 휴학생이다.)
+		</p>
+		<p class="player p11">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			(곧 옆집에 사는 소꿉친구랑 부딪히겠는데)
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			(대학에 가자마자 입대 신청을 하고 힘든 군생활을 보내고 나왔더니..)<br>
+			(보다시피 제대하자마자 몬스터들이 뛰쳐나와서 그 자리에서 각성했다.)<br>
+			(하..)<br>
+			(내 인생은 왜 이럴까..)<br>
+			(이제와서 뭐? 헌터등급 측정?? 나라 해주는게 뭐야??)<br>
+			어쩔 수 없지.. 대한민국 국민인걸.. (헌터 협회에서 온 문자 보고 한숨쉬로 폰 주머니에 넣고 갈듯w
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			아~ 한숨쉬는 다찬이~ 헌터 등급 시험은 별로 안 좋아하나봐요.<br>
+			터덜터덜 걸어가겠죠? 그래도 도착은 해야하니까 갑시다.
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			에휴,, 에휴,, (터덜터덜,,
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			한숨을 쉬며 안다찬은 국가 헌터 등급 시험장에 도착합니다.<br>
+			◈◆◆◆ 장면을 종료합니다 ◆◆◆◈<br>
+			등장인물 : 서하빈<br>
+			시험장소로 지정된 건물의 입구에는 「국가 헌터 등급 시험장」이라 적힌 커다란 현수막이 걸려 있고 그 아래로 헌터협회 직원들이 배치되어 있습니다.<br>
+			(직원들 역시 헌터입니다.)<br>
+			헌터들이 모이는 장소인 만큼 각종 사고에 대한 대비로 보입니다.<br>
+			서하빈이 시험장에 들어서면 멈춰 세우고 신원을 확인합니다.<br>
+			신원 확인을 위해 간단한 자기 소개를 해주시겠어요? w
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			이름은 서 하빈이고요,,,<br>
+			나이는 23살 작년에 게이트열리면서 부모님을 잃고 각성했습니다<br>
+			각성하기 전까진 프로그래머였고요.<br>
+			근데 뭐하는데 이렇게 일찍오라그래요?<br>
+			게이트 열리기 전에는 프로그래머로 일했는데,,,<br>
+			그때 바뀐 생활패턴때문에 아침에 일어나기가 좀 힘드네요,,,<br>
+			혹시 또 소집할거면 좀 늦게 불러주시면 안돼요?<br>
+			(대충 궁시렁거리는중)
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			그럼 시험에 대한 생각은 어떤가요?
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			하,,,시험,,,<br>
+			고등학교이후론 본적도없는데,,,<br>
+			(고등학교때도 찍고 잤을듯w)<br>
+			(적당히 빨리치고 집에 가고싶다! 란 마음가짐)
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			헌터협회 직원은 적당히 고개를 끄덕이며 대충 서하빈을 안으로 들여보내줍니다.<br>
+			어쩐지 목소리에는 피로와 귀찮음이 가득 담겨 있습니다.
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(터덜터덜)
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			한쪽에선 시험에 쓸 물건인지 무언가가 입구에 잔뜩 쌓여 있습니다.<br>
+			헌터 협회 직원들이 짜증스러운 한숨을 내쉬며 이야기하는 것이 들려옵니다.
+		</p>
+		<p class="player p15">
+			<b>A</b>
+			아니 이런 게 있으면 미리 말했어야지!
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(저사람들도 출근하기 싫었겠지,,,)
+		</p>
+		<p class="player p16">
+			<b>B</b>
+			일 처리 누가 했냐 이거.
+		</p>
+		<p class="player p15">
+			<b>A</b>
+			안 그래도 일 많은데 미치겠네.
+		</p>
+		<p class="player p16">
+			<b>B</b>
+			난 요 며칠 퇴근도 못했어.
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			서하빈은 그런 직원들의 모습을 보며 터덜터덜 시험장 안으로 들어갑니다.
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(약간 이해한다는듯이 음음,,하고 들어감ㅋ)
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			◈◆◆◆ 장면을 종료합니다 ◆◆◆◈<br>
+			등장인물 : 차윤영<br>
+			시험장 안쪽으로 들어오면 더욱 더 많은 사람들이 보입니다.<br>
+			시험 대기 장소가 좁아서인지 조금만 몸을 움직여도 부딪 칠 것만 같습니다.<br>
+			뉴스에서 몇 번 보았던 헌터도 있고 여기저기 협회 직원으로 보이는 사람들도 있습니다.<br>
+			간단한 소개 한 번 하고 갑시다. 시험에 대한 생각은 어떤가요?
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			아...근데 카메라 꼭 꺼야 하나요?  지금 방송중이거든요<br>
+			그동안 등급 때문에 구설수에 오르신 헌터 분들이 워낙 많으니까~ 이런 시험으로 인.증. 할 수 있다면 좋을거 같네요~
+		</p>
+		<p class="player p17">
+			<b>직원</b>
+			공적인 시험 장소이기에 카메라는 꺼주시길 바랍니다.
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			(카메라 보면서) 여러분 들으셨죠? ㅠㅠ 아쉽지만 오늘 라이브는 여기까지 해보도록 할게요~ 시험끝나고 후기 라이브도 킬테니까 기다려줘요~<br>
+			(카메라끔)<br>
+			아이.....ㅆ바 ㅋ 사람 개많네...<br>
+			아저씨 여기 정수기 어딨어요<br>
+			목말라죽겠어
+		</p>
+		<p class="player p17">
+			<b>직원</b>
+			정수기는 저쪽입니다. (한 구석을 가리킵니다.)
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			(저번 영상 조회수 보면서 물마시러감 .)
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			그런 윤영의 시선에 이제 막 시험장에 들어오고 있는 하빈과 한쪽에서 시험장을 살펴보는 듯한 다찬의 모습도 들어오네요.<br>
+			서로 아는사이라면? w 인사를 해도 좋습니다.
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			(초면이겟죠?ㅋ
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(하품하고잇을듯)
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			그렇게 시험장 안을 살펴보고 있는 윤영의 등을 누군가가 퍽! 소리가 날 정도로 치고 지나갑니다.
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			악!ㅆ바<br>
+			저기요 눈깔을 어떻게.... 아아니 조심하셔야죠 ^^
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			윤영이 돌아보면 딱히 사과하거나 당신을 보고 있는 사람은 보이지 않습니다.<br>
+			사람이 많아서 누가 부딪쳤다 해도 알아보기 힘들 것 같습니다.
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			-ㅅ-
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			바닥을 살펴보면 그 사람이 떨어트린 듯한 무언가가 있습니다.
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			뭐야<br>
+			(주워서 살펴봐요
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			윤영은 그것을 주워서 살펴봅니다.<br>
+			◈◆◆◆ 장면을 종료합니다 ◆◆◆◈<br>
+			등장인물 : 유지나<br>
+			시간이 거의 다 되어 갑니다.<br>
+			다행히 지나는 시간에 맞춰서 시험장에 들어올 수 있었습니다.<br>
+			시간에 맞춰서 들어온 지나. 간단한 자기소개와 시험에 대한 생각 부탁드려요?
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			아~ 헌터협회 진짜 구석탱에 만들어 놨네~<br>
+			아이씨 늦을 뻔 했잖아!<br>
+			이딴 귀찮은 시험... 도대체 왜 하는거야? 지금까지 잘 굴러갔잖아.<br>
+			이 유 지 나 님께서 헌터 등급에 대해서 딱 정해주지. 꺄하하
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			그 때 지나에게 누군가가 다가와 말을 걸어 옵니다.<br>
+			그는 자신을 헌터A라고 소개합니다.
+		</p>
+		<p class="player p18">
+			<b>NPC 헌터 A</b>
+			오늘 시험을 본다는데 긴장되지 않아?<br>
+			이렇게 헌터들이 모인 것도 처음이지.<br>
+			시험 어떻게 진행될지 궁금하다.<br>
+			네 생각은 어때?
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			(뭐야 냄새나는 아저씨)<br>
+			(뭐야 찐따 말투)<br>
+			흠흠, 어짜피 내 것만 잘하면 되니까요.
+		</p>
+		<p class="player p18">
+			<b>NPC 헌터 A</b>
+			그래? 음음, 역시 그렇지.
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			헌터A는 꽤 붙임성 좋은 성격인지 처음 보는 지나를 붙들고 이것저것 이야기를 하며 떠들어댑니다.<br>
+			그러다 곧 일정이 시작되니 안으로 들어와 자리에 착석해 달라는 안내 방송이 흘러나옵니다.
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			자자, 자리에 앉으러 가라구요.
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			지나는 자리에 앉으러 갑니다.<br>
+			◈◆◆◆ 장면을 종료합니다 ◆◆◆◈<br>
+			등장인물 : 전원<br>
+			회장 안으로 들어서면 무대가 만들어져 있습니다.<br>
+			무대 위로는 연설하는 단이 꾸며져 있고, 앞으로는 접이식 의자들이 쭉 나열되어 있습니다.<br>
+			무슨 학교 행사 도 아니고….<br>
+			무대 위에는 식순이 적힌 배너가 올려져 있습니다.<br>
+			개회 - 협회장 인사 - 능력 측정 시험 능력 시연 시험 - 등급 발표 - 폐회
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			으윽 진심이냐고...
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			보기만 해도 지겨울 법한 순서입니다.
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			하아~ 벌써 지겹다
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			(마스크쓰고 몰래 하아품)
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			어쩌다 보니 여러분들은 일렬로 나란히 자리에 앉습니다.
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(이미 조는중)
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			이때 인사를 해보는건 어떨까요?w<br>
+			할생각이 없다면? 넘기고?
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			(저새끼 자는데)
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			(폰 뒤적거리는중...)
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			(w)(친구들보고)와.. 완전 협회장 인사 지루할 것 같지 않아요?
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			(명백하게 따분한 표정)
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			(제옆자리누구죠 pc1234순인가요
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			아~ 그러게요~ 돈이라도 주던가.
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			네w 1234 순입니다
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(애들 얘기해서 살짝깸ㅋㅋ)<br>
+			저기,,,이거 몇시에끝나는지 아세요,,?
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			글쎼요~ 사람이 많아서
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			일찍 끝나면 일찍 가겠죠~
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			오후는 돼야 끝나지 않을까요
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			그러게요~ 저희 나라에 헌터가 이렇게 많은 줄은 몰랐네요.
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			카메라도 못 키게 하고 참~ 무슨 기밀을 지킨다고
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			카메라? 방송일 하는 분이세요?
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			방송일까진 아니구.... 개인방송ㅋ해요
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			아,,,<br>
+			본거같기도하고,,?
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			(뭔... 처음 보는데 하꼰가)
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			별건 아니고~ 유튜브 채널 운영하고 있어요 ^^ ~
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			(하꼬네 ^^)
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			아~ 정말요? 채널 이름이 뭐에요? 구독해야겠네.<br>
+			혹시 모르잖아요? 이 분이 나중에 엄청 유명한 헌터유튜버가 될지~
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			그럼 지금 싸인 받아놔야겠네요 (ww)
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			헌터Y예요~ 이런저런 얘기 올라와요 ^-^
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			이건가보다! 저 구독하고 알림설정 까지 했어요!<br>
+			아참 자기소개가 늦었네요. 저는 안다찬이에요. 다들 성함이..?
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			저는 차윤영이에요.
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			아,, 전 서하빈이에요.
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			저는 유지나예요~
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			(졸던 사람이네..)
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(멍~ㅋ)
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			어느 정도 인사를 나누고 있노라면 주변에서 다른 헌터들이 하는 이야기도 들려옵니다.
+		</p>
+		<p class="player p15">
+			<b>A</b>
+			이거 정말 가능한 거 맞아? 시스템 창이 공유되는 것도 아니고.
+		</p>
+		<p class="player p16">
+			<b>B</b>
+			어쩌면 남의 시스템 창을 볼 수 있는 각성자가 나온 걸지도 모르지. 이거 완전 사생활 침해 아니야?
+		</p>
+		<p class="player p15">
+			<b>A</b>
+			야 우리 정보는 이미 중국에 건당 1원에 팔리고 있다고. 무슨 사생활 침해야?
+		</p>
+		<p class="player p16">
+			<b>B</b>
+			운명의 날 전 이야기 아냐 그거? 지금은 1원도 안 되겠지.
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			그때, 다시 안내방송이 흘러나오며 협회 장의 입장을 알립니다.<br>
+			무대 위로 뚜벅뚜벅 걸어 올라오는 헌터 한명이 보입니다.<br>
+			척 보기에도 근엄함과 위압감이 넘쳐흘러 보입니다.
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			(저거 가발일까?)
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			(노친네 빨리 끝내줘)<br>
+			^^.
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			빨리 끝내줬으면 좋겠다 그쵸 (하빈이한테 소곤소곤)
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(뭐? 졸다가 듣고 깻을듯) 네?,,뭐라고하셨어요?
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			무대 위에 선 협회장은 마이크를 조금 매만지고는 자신감 넘치는 눈빛으로 연설을 시작합니다.
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			아.. 아니에요..^^
+		</p>
+		<p class="player p19">
+			<b>NPC 협회장</b>
+			친애하는 대한민국 헌터 여러분 안녕하십니까.<br>
+			협회장인 현태곤 입니다.
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			(하.....드르렁...)
+		</p>
+		<p class="player p19">
+			<b>NPC 협회장</b>
+			바야흐로 운명의 날로부터 몇 달이 흘렀습니다.<br>
+			우리 대한민국은 독보적으로 빠르게 움직여 세계 최고의 자리에 우뚝 서게 되었습니다.
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(ASMR삼아 들으면서 조는중)
+		</p>
+		<p class="player p19">
+			<b>NPC 협회장</b>
+			아직도 고통받고 죽어가는 다른 나라들과는 달리,<br>
+			이 대한민국만큼은 현재 국가가 정상체제로 돌아왔다고 봐도 무방할 만큼 안정적인 곳이 되었습니다.<br>
+			이렇게 될 수 있었던 이유는 바로 여러분들 같은 헌터 분들의 희생과 노력이 뒷받침되었습니다.<br>
+			…(중략)…<br>
+			마지막으로 이야기하자면…<br>
+			…(중략)…<br>
+			이상으로 맺음을 하기 전 에, 마지막으로…
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			(아.......옘병 노친네...........)
+		</p>
+		<p class="player p19">
+			<b>NPC 협회장</b>
+			…(중략)…<br>
+			한 말 씀 더 드리자면…<br>
+			…(중략)…
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(뭐지? 옆에서 누가 욕하는거같음)<br>
+			(아니겠지,,,ㄷㄹㄹ)
+		</p>
+		<p class="player p19">
+			<b>NPC 협회장</b>
+			이상입니다.<br>
+			우리 헌터들은 게이트 사태를 미연에 방지하여…<br>
+			...
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			한참이 지난 뒤에 드디어 연설이 끝나고 협회장은 무대 아래로 내려갑니다.
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			(박수침)
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			다시 한 번 회장에 설치된 스피커에서 안내 방송이 흘러나옵니다.
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(졸다가 박수치는거듣고 일어나서 덩달아 박수침)
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			헌터 여러분들은 자리에서 일어나 주시길 바랍니다.<br>
+			...<br>
+			그럼 본격적인 측정에 앞서 헌터간의 담소 시간이 있겠습니다.<br>
+			모쪼록 서로 친분을 쌓아주세요.
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			(뭔 담소야)
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			그와 함께 회장 곳곳에서 테이블이 솟아나더니 직원들이 그 위로 다과를 차립니다.<br>
+			회장 곳곳에 설치된 TV가 켜지고 음악과 함께 홍보 방송도 흘러나오네요.
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			음~ (존나 딴짓만 함)
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			하....ㅋ (몰래 라이브 킬까? ㅋ
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			(대충 얘가 와 가요가요~하고 세명 데리고 한 테이블에 앉앗을듯)
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			아무래도 담소 시간을 빙자한 홍보시간 인 것 같습니다.<br>
+			하긴 게이트가 아니고서야 헌터들이 한꺼번에 이만큼 모이기는 쉽지 않죠.
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			하긴 이번이 아니면 헌터들이 이렇게나 모일 일은 없겠죠?
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			그렇겠죠~
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			이것도 인연인데 연락처 교환이라도 할까요?
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			좋아요~ (폰 내밈)
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			앞으로 도울 일 있으면 같이 돕는거고. 솔직히 혼자서 활동하기는 너무 바쁘더라구요~
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			저야 고양이 손이라도 빌리고 싶죠
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			(왐마야
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			(지나폰에 자기 번호 찍어주고 전화걸엇을듯) 헌..터..지..나..씨.. (타닥타닥) 음, 저장했어요!
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			그리고 많이 나가면 그거. (손가락으로 동그라미 모양 만듦.)
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			(wwwwwwww) 지나씨는 아직 어려보이는데 돈에 관심이 많나봐요?
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			그거?<br>
+			그게 좀 중요하긴 하죠,,,
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			그게 중요하죠.
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			그쵸
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			그쵸.<br>
+			(끄덕끄덕)
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			그쵸.
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			나이도 어려보이시는데 잘아시네요?
+		</p>
+		<p class="player p11">
+			<<b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			이건 지나가는 5살 꼬마도 알거라구요~
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			우린 잘만 하면 얼마든지 땡길 수 있거든요~ㅋ
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			... (폰 봄) (다시 윤영 봄)
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			(뭘 야리냐 어린놈아) ^^~
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			(무서워~)
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			^^; (번호찍어달라고 윤영이랑 하빈이한테 폰 내밀음,,)
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			(번호찍어주기
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			급한 일 있으면 연락하세요. 제가 도움이 될런지는 모르겠지만..
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(받아가지고 찍어줌) 저,,근데 낮에는 연락 못받으니까요,,,
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			급한 일이 안생겨서 절 안부르는게 제일 좋겠네요 하하<br>
+			아~ 하빈씨 올빼미인간? 그런건가요?
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			다찬씨는 무슨 능력인데요? (궁금!!)
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			아 저는.. 얼음을 다룰 수 있어요. 물만 있으면 뭐든 얼릴 수 있는 정도? 물이 없어도 만들 수 있긴 하더라구요. 근데 그렇게 강하진 않아요 혼자서는 버겹고.. (머쓱하게 웃음)<br>
+			지나씨는요?
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			와! 여름에 진짜 필요한 인재네요<br>
+			엘사다찬 ~ (웃음)
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			ㅋㅋㅋ
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(아 ㅁㅊ 듣고 혼자 약간터짐)
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			하하 저 왕인건가요?w
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			여왕~ ㅋ
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			요즘은 남자도 여왕이 될 수 있는 시대죠 네네
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			저는 음... 총기를 다뤄요! 그렇게 쎄진 않아요. (ㅎㅎ)
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			와 총기 멋있네요~
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			오,,
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			우와~ 멋지네요~<br>
+			다른 분들은요?
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			아 저는 독성 안개를 만들 수 있어요~<br>
+			몬스터를 마비시키거나 시야를 가려요.<br>
+			사람한테는 안 통하더라고요 ㅋ
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			아 저는 음,,,<br>
+			설명하기가 어려워서,,,다음에 기회가 되면 보여드릴게요.
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			아하 ~ (너무해~)
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			그보다 독성안개 좋네요 몬스터 상대할때 편한가요?
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			사람한테 안 통하는건 다행이네요w
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			그런 편이죠~?
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			하빈씨~ 설마 막 D급이고 그런거 아니에요? (장난!)
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			그정돈 아닌데,,그렇게 강하진않아요.
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			...진짜 D급이면 어쩌시려고
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			근데 이번에 바뀔수도 있으니까<br>
+			뭐라고 딱 말하기가좀,,<br>
+			다들 등급 바뀔거같으신가요?
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			뭐 바뀌면 바뀌는 거고....
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			글쎄요.. 다른 사람이 있다면 비교해봤을텐데 그동안은 혼자 활동해서..
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			그치만 저는 서포트 면에서는 자신있다고 생각해요~
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			멋있어~
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			윤영씨는 등급 높은편이 조회수 잘나오니 좋지않을까요,,?
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			그쵸~
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			(왜 그쪽으로 굴러가 생각이 ㅋㅋㅋ)
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			근데 워낙 S급 헌터 타이틀 걸고 주작방송하시는 분들도 있어서~
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			(ㅋㅋ)
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			차라리 이번 기회에 등급이 제대로 정리되면 좋겠네요 ^^
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			그런 사람들은 이번에 완전 난리 나겠네요..
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			그러게요.
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			그렇죠 ㅡㅅㅡ!!
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			여러분은 이런저런 이야기를 하며 시간을 보냈습니다.<br>
+			시험이 시작되기 전까지 다른 얘기를 더 할 기회가 있겠죠.<br>
+			◈◆◈◆ 도입 페이즈 종료 ◈◆◈◆<br>
+			◈◆◈◆ 메인 페이즈 ◈◆◈◆<br>
+			▶ 1사이클 첫번째<br>
+			장면 플레이어 : 유지나<br>
+			등장인물 : 전원
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			◈◆◆◆ 장면을 종료합니다 ◆◆◆◈<br>
+			ㅋㅋㅋㅋ
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			네<br>
+			방송 조사해볼게요 음<br />
+			진짜... 돈을 대체 얼마나 안쓴건지... 눈 앞의 티비는 지나의 예술 감각을 거스르는 노란장판 감성 티비네요... 거슬려요. 예술로 조사해볼게요.
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			예술 굴려봅시다
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			2D6&gt;=6 예술 <br>
+			<span class="diceroll">Insane : (2D6&gt;=6) ＞ 8[3,5] ＞ 8 ＞ 성공</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			홍보방송 비밀 우클릭-자기만보기 해서 가져가주세요<br>
+			정보공유는 알아서 해주시고요
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			이게뭐어떻게된거시당가
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			필요하면?<br>
+			아맞다 장면표 안뽑음
+			뒤늦게라도 장면표뽑게<br>
+			2D6 굴려봅시다
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			2d6 <br>
+			<span class="diceroll">Insane : (2D6) ＞ 8[4,4] ＞ 8</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			바람을 타고 어딘가에서 짙은 혈향이 풍겨온다. 이젠 익숙하다.
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			여긴 실낸데..?
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			(누가죽엇어......................)
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			이상하게 생각하지만 아무 액션 안취할게요
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			흠 ㅇㅋ
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			비밀공유는<br>
+			음......<br>
+			아효 다같이 공유할게요
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			ㅋㅋ
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			몰라몰라
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			그럼 비밀 전체공개 해드릴게요<br>
+			안다찬 이성 -1
+		</p>
+		<p class="player p20">
+			<b>system</b>
+			[ 안다찬 ] SAN : 5 → 4
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			이게<br>
+			무슨소리애요.<br>
+			저사람 얼굴이 음흉해요
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			?,,
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			?.
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			네...?
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			저기 그래도 사람을 얼굴가지고 판단하는건좀,,,
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			관상 같은 거 보세요?
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			그 감이란게 있잖아요~ 처음부터 꼬운 사람이 알고보니 진짜 행실이 나쁜 사람 이었다거나..
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			(뭔소리 하는진 모르겠지만 일단 끄덕여줌)
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			연설이 많이 지루하셨나보네..... 하긴 저도 듣다가 생매장.....아니 졸뻔했어용
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(사실 별로 관심없는데 그냥 음~하면서 들을듯)
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			(다찬이 근처에 진짜 좋은 친구들만 있네)
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			(ㅋㅋ)
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			그럼이제<br>
+			더할거없는거같으니까<br>
+			◈◆◆◆ 장면을 종료합니다 ◆◆◆◈
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			1사이클 두번째<br>
+			장면 플레이어 : 차윤영<br>
+			등장인물 : 안다찬, 차윤영
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			2d6 <br>
+			<span class="diceroll">Insane : (2D6) ＞ 10[5,5] ＞ 10</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			날카로운 울음소리가 울려 퍼진다. 고양이나 어린애가 어딘가에서 울고 있는 건가? 아니면….
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			시험장에 이게 무슨 소리람 . . . .<br>
+			윤영은 육감적으로 깨닫습니다. 안다찬이랑 친해지면 여러모로 이득일 것이라는 사실을........ 필요할 때 불러내서 써먹을 수 있겠다는 것을 .....<br>
+			육감으로 감정판정 할게요
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			해봅시다
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			2D6&gt;=5 육감 <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 5[2,3] ＞ 5 ＞ 성공</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			그럼 둘 다 FT 굴려주세요 채팅창에 이것만 치면 감정표 나온대요
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			FT <br>
+			<span class="diceroll">Insane : 감정표(6) ＞ 광신（플러스）／살의（마이너스）</span>
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			FT <br>
+			<span class="diceroll">Insane : 감정표(1) ＞ 공감（플러스）／불신（마이너스）</span><br>
+			(윤영이 유튜브 영상 보고잇엇을듯?ㅋㅋ<br>
+			광신뭐냐고오오
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			원하는걸로 서로 골라주세욤
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			살의는 쫌 너무하니까 광신 고를게요;;
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			둘다너무해요<br>
+			전공감이요;
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			상호 플러스니까 비밀사명 공유 가능?
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			네
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			다찬이한테 제꺼 알려줄게요 ?
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			우와.<br>
+			아그럼<br>
+			아~
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			가져가세용
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			우~ㅋ<br>
+			아니 윤영씨 그렇다구요?!<br>
+			난리법석<br>
+			떠는중
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			진정하세요~<br>
+			아직은 모르니까<br>
+			◈ ◆◆◆ 장면을 종료합니다 ◆◆◆ ◈
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			◈◆◆◆ 마스터 장면 ◆◆◆◈<br>
+			등장인물 : 전원<br>
+			그때 회장 안쪽 문이 열리고 무언가를 올린 카트들이 돌돌돌 굴러 나옵니다.<br>
+			흰 천 위에 올라가 있는 것은 작은 네모박스 형태의 아티팩트입니다.
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			(씨 이걸 찍어야했는데)
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			헌터 여러분들에게 공개해 드립니다. 각성자의 힘과 과학이 함께 만들어낸<br>
+			마도공학 아티팩트<br>
+			등급 측정 장치입니다!<br>
+			헌터들이 웅성거리며 그 앞으로 모여듭니다.
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			저런 걸로 사람을 측정할 수 있다고?
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			하지만 직원들이 지키고 서있어 가까이 다가가서 만져 보지는 못합니다.
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			우와,,
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			여러분들도 조금 떨어진 곳에서 그 장치를 볼 수 있습니다.<br>
+			깔끔한 디자인이 꽤 괜찮네요.
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			신기신기
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			뭘로만든걸까,,,
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			◈◆◆◆ 마스터 장면을 종료합니다 ◆◆◆◈<br>
+			1사이클 세번째<br>
+			장면 플레이어 : 서하빈<br>
+			등장인물 : 전원<br>
+			장면표 굴립시다
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			2d6 <br>
+			<span class="diceroll">Insane : (2D6) ＞ 7[2,5] ＞ 7</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			어디에선가 풍겨오는 맛있는 냄새에 갑자기 배가 고파졌다. 오늘은 뭘 먹을까?
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(아,,배고프다,,)
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			(집가서 노가리 먹방할까)
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			근데,,헌터협회장은 뭐하는 사람이지,,,?갑자기 의문이 들어서 시간을 두고 관찰해봅니다.<br>
+			시간으로 판정.
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			해봅시다
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			2D6&gt;=5 시간 <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 5[1,4] ＞ 5 ＞ 성공</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			제가 갖고있는 비밀 가져가세요
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(흠,,,)<br>
+			협회장,,약간,,,뭔가 이상하지않아요?<br>
+			(하면서 정보 전체공개)
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			협회장의 비밀이 공개됩니다.
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			...
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(오늘안에 끝나겠지? 생각중
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			아주 수상하네요~~~~
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			(다찬씨...)
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(다찬씨,,,<br>
+			(수상하다고하는 다찬이를 약간 수상하게 쳐다보며<br>
+			◈ ◆◆◆ 장면을 종료합니다 ◆◆◆ ◈
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			1사이클 네번째<br>
+			장면 플레이어 : 안다찬<br>
+			등장인물 : 전원
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			2d6 <br>
+			<span class="diceroll">Insane : (2D6) ＞ 10[4,6] ＞ 10</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			날카로운 울음소리가 울려 퍼진다. 고양이나 어린애가 어딘가에서 울고 있는 건가? 아니면….
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			헌터인생 대충 6개월.. 이런 장치가 만들어진다는 소식은 전혀 듣지 못했다.. 갑자기 이런게 만들어질수있나 형태가 없는 능력을 어떻게 측정한단 말이지? 과학이아니라 &lt;마술&gt; 아닌가?<br>
+			등급 측정 장치 마술로 조사.
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			해봅시다
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			2D6&gt;=5 마술 <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 10[5,5] ＞ 10 ＞ 성공</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			비밀 가져갑시다<br>
+			고수<br>
+			안다찬 이성 -1
+		</p>
+		<p class="player p20">
+			<b>system</b>
+			[ 안다찬 ] SAN : 4 → 3
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			&lt;파괴&gt;로 공포판정 해주세요.
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			2D6&gt;=8 파괴 <br>
+			<span class="diceroll">Insane : (2D6&gt;=8) ＞ 7[2,5] ＞ 7 ＞ 실패</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			광기뽑끼이
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			헤헷<br>
+			어디에요 맨오른쪽?
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			네 ㅎㅎ<br>
+			카드 뽑기
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			아 광기 존나웃겨<br>
+			아니.. 이건..! 하면서 모두에게 장치비밀 공유하죠<br>
+			그리고.......................<br>
+			제 비밀 윤영이에게 공개 가능인가요
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			ㅇㅋㅇㅋ<br>
+			등급 측정 장치의 비밀이 공개됩니다.<br>
+			전원 이성 -1<br>
+			&lt;파괴&gt;로 공포판정 해주세요.
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			윤영이한테 수군수군 속닥속닥 그런거같다며 어쩌구저쩌구
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			파괴
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			2D6&gt;=6 파괴 <br>
+			<span class="diceroll">Insane : (2D6&gt;=6) ＞ 4[1,3] ＞ 4 ＞ 실패</span>
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			2D6&gt;=7 파괴 <br>
+			<span class="diceroll">Insane : (2D6&gt;=7) ＞ 6[2,4] ＞ 6 ＞ 실패</span>
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			2D6&gt;=5 파괴 <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 8[2,6] ＞ 8 ＞ 성공</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			실패하신분들 광기뽑기하고<br>
+			카드 어따 구석에 박아둡시다 ㅋㅋ
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			ㅋㅋ이거맵아래로좀늘려야하는거아닌지
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			이거 걍 암데나 놓으면되는데
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			아글네
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			차윤영에게 안다찬의 비밀이 공유됩니다.
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			이게그거인거같아요수군수군
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			그런거같네요......<br>
+			어떡한담
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(무슨얘기람)
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			(zz)
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			(팔짱끼고 꼬라봄)
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			완전둘이서만 서로비밀공유중
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			이리와요 하빈씨
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			수군수군
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			아 ㅋ
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			저희도 비밀얘기하는것처럼<br>
+			속닥거려요
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(머임?
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			(왐마야
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(옆에가서섬ㅋ
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			왐마야~
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			(소곤소곤소곤)
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			요즘 학생이란~
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(소곤소곤 저 배고파요)
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			(측정 끝나면 텐동 먹으러 가죠)
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(맛있겠다)
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			(ㄹㅇㅋㅋ)
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			ㅋㅋ<br>
+			쌍으로 수군수군속닥속닥<br>
+			◈ ◆◆◆ 장면을 종료합니다 ◆◆◆ ◈
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			1사이클 종료<br>
+			◈◆◈◆ 마스터 장면 ◈◆◈◆<br>
+			등장인물 : 전원<br>
+			choice[안다찬,서하빈,차윤영,유지나]  <br>
+			<span class="diceroll">Insane : (CHOICE[안다찬,서하빈,차윤영,유지나]) ＞ 유지나</span><br>
+			유지나에게 누군가가 꽁! 하고 등 뒤에서 부딪쳐 옵니다.<br>
+			돌아보면 왠지 어리숙해 보이는 사람이 쩔쩔매며 사과를 합니다.
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			아야
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			기자는 사과를 하며 횡설수설 이야기를 꺼냅니다.
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			ㅎㅎ
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			이거 취재를 왔는데 방해만 되는 게 아닌가 모르겠네요!
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			(ㅎㅎ)
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			좀 있다가 인터뷰 하나 딸 건데, 그때 잘 좀 부탁드릴게요. 아직 제가 아는 헌터분들이 없어서….
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			그래요^^. 이것도 인연인데, 당연하죠
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			감사합니다! 눈앞에서 헌터님들의 능력 시연을 볼 생각을 하면 가슴이 두근거립니다!
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			헌터 찾으실땐 유지나! ㅋ<br>
+			네넹ㅎㅎㅎ
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			유지나 님이시군요! 모쪼록 잘 부탁드립니다!
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			네 저도 마찬가지에요 기자님~
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			혹시 다른 아는 헌터분이 있다면... 소개를 부탁드려도 될까요?
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			음~ (주위둘러봄)<br>
+			(다들 눈 한 번씩 마주침)
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			(ㅋㅋ)
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(왜쳐다보지? 하품할듯)
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			지나씨 무슨 일이에요? (서성거림)
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			(기대하는 눈빛으로 바라보는중.)
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			(ㅇㅅㅇ )
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			아아~ 하빈씨~ !!!<br>
+			여기에요 여기 ^^
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			?<br>
+			저요?
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			(하품하는 하빈이 끌고 기자 앞으로 데려감ㅋ
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			(머쓱하게 돌아감)
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(머임?<br>
+			(다찬이 옷소매끌고 같이끌고옴
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			(ㅋㅋㅋㅋ
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			에?
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			이분은.. 하빈 헌터님이라고 부르는 건가요?!
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			자 여기는 안다찬씨구요,<br>
+			저기 핑크 머리는 서하빈씨에요 ^^
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			이따 인터뷰를 하려고 하는데, 잘좀 부탁드립니다!
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			아..
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			자자 윤영씨도 오시라구요
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			저기,,그거 꼭 해야돼요?
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			(ㅇㅅ ㅇ
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			(옆구리 쿡 찌름)<br>
+			유명해지면<br>
+			돈!
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(윽
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			(ㅇㅅ  ㅇ 기사를 타면.....더 유명해지겠지?
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			(소근소근)
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			(ㅋㅋ)<br>
+			어디 소속이신데요?
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			그, 그런건 아니지만.... 멋진 기사를 쓰기 위함이니까요!<br>
+			인세인 방송국 소속입니다!
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			(간지나게 작성되면, 돈! )
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(별로 안끌린다는 표정~ㅋㅋ)
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			(인세인방송국이면 개유명한 한국1위 방송국아냐?ㅋ)
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(인세인방송국????
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			기자님 안녕하세요~ ㅋ<br>
+			헌터 차윤영이에요 ^^
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			윤영씨 불렀는데 왜 이제와요 ㅎㅎ
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			저,,그 저보단 윤영씨가 낫지않을까요
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			모두 저를 위해서 이렇게 모여주신 건가요...! (감동의 눈빛)
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			아무튼 저는 소개시켜 드렸어요? ^.^
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			그쪽때문은 아닌데 뭐.. 여튼..
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			뭐 인터뷰 같은 거 진행하실거면 언제든 연락하세요~^^
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			아아 물론이죠옹
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			네네, 이따가 꼭 잘좀 부탁드립니다!!
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			네네 잘 부탁드립니다~
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			그럼 이따 뵐게요! (웃는 얼굴로 꾸벅 인사하고 자리로 돌아갑니다.)
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			바바잉~
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			(기자가 띨띨해보이네w
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			(그쵸?
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			열정이 넘쳐보이는 초보 기자였네요.
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			저기.. 다 들리겠어요..
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			기자가 떠나고, 다시 여러분만이 남았습니다.<br>
+			◈◆◆◆ 장면을 종료합니다 ◆◆◆◈<br>
+			2사이클 첫번째<br>
+			등장 플레이어 : 안다찬<br>
+			등장인물 : 전원
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			2d6 <br>
+			<span class="diceroll">Insane : (2D6) ＞ 9[4,5] ＞ 9</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			깨진 유리창 앞을 지나갈 때, 기분 나쁜 뭔가가 비친다. 착각인가?
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			아니 건물 관리를 이따위로<br>
+			기자한테 잘보여서 나쁠게 없죠? 초보 기자여도 앞으로 어케 될지 몰라요? 인터뷰 잘 내보내달라고 싸바싸바해야죠? 시사채널에서 필요한 것이 머겟습니까. 역시 &lt;교양&gt; 아닙니까? 교양잇게 감정맺기 시도.
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			해봅시다 ㅋ
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			2D6&gt;=5 교양 <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 4[2,2] ＞ 4 ＞ 실패</span><br>
+			이걸
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			저걸
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			저한테
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			뭐.. 아이템 쓰시나요?
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			부적써주실분?
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			무기잇잖아요
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			없네요?
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			ㅋㅋ
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			무기쓸게요
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			무기 쓰고 재굴림 해주세요
+		</p>
+		<p class="player p20">
+			<b>system</b>
+			[ 안다찬 ] 무기 : 1 → 0
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			2D6&gt;=5 교양 <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 5[1,4] ＞ 5 ＞ 성공</span><br>
+			아슬아슬하네
+		</p>
+	</div>
+
+	<div class="tab t2">
+		<p class="player p20">
+			<b>system</b>
+			[ 차윤영 ] SAN : 4 → 3<br>
+			[ 차윤영 ] SAN : 3 → 3
+		</p>
+	</div>
+
+	<div class="tab t3">
+		<p class="player p20">
+			<b>system</b>
+			[ 안다찬 ] SAN : 3 → 2
+		</p>
+	</div>
+
+	<div class="tab t1">
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			에................
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			아 감정표 안굴렷네<br>
+			감정표 FT
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			1d6 <br>
+			<span class="diceroll">Insane : (1D6) ＞ 6</span><br>
+			아<br>
+			FT <br>
+			<span class="diceroll">Insane : 감정표(6) ＞ 광신（플러스）／살의（마이너스）</span><br>
+			ㅋ
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			FT <br>
+			<span class="diceroll">Insane : 감정표(4) ＞ 충성（플러스）／모멸（마이너스）</span>
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			언론은..섬겨야죠 네네 광신 할게요
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			음.... 기자는 ..<br>
+			choice[충성,모멸] <br>
+			<span class="diceroll">Insane : (CHOICE[충성,모멸]) ＞ 모멸</span><br>
+			모멸로
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			에............................<br>
+			그럼나도살의할래.......................................
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			ㅋ
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			알겟어요..<br>
+			사람들이랑<br>
+			아이컨택시도함<br>
+			나랑눈마주치면 비밀알려준다
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			(스윽
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			윤영씨..
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			아 맞아 감정맺은사람은
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			(가서 또 소곤소곤함ㅋㅋ
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			정보 원하면 공유해달라고 하세요
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			(공유 ㅂㅌ ㅋㅋ<br>
+			기자양반이 머라구 해요?ㅋ
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			(소곤소곤) 그렇다네요..<br>
+			그래도 아직 이거 유튜브에 막 올리지는 마시고..
+		</p>
+	</div>
+
+	<div class="tab t4">
+		<p class="player p20">
+			<b>system</b>
+			[ 차윤영 ] SAN : 3 → 2
+		</p>
+	</div>
+
+	<div class="tab t1">
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			와....나....ㅋ
+		</p>
+	</div>
+
+	<div class="tab t2">
+		<p class="player p20">
+			<b>system</b>
+			[ 차윤영 ] 진통제 : 1 → 0<br>
+			[ 차윤영 ] SAN : 2 → 3
+		</p>
+	</div>
+
+	<div class="tab t1">
+		<p class="player p20">
+			<b>system</b>
+			[ 안다찬 ] 진통제 : 1 → 0<br>
+			[ 안다찬 ] SAN : 2 → 3
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			하........ 들은게 너무 많아서.......<br>
+			혼란하네요........<br>
+			(ㅋㅋ)<br>
+			아~ 하빈씨 지나씨<br>
+			거기서 둘이서만 무슨 얘기 해요~
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			네?
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			...아무얘기도안했는데
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(어색함)
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			아니 들어보세요 제가 방금 기자한테 들었는데.. 진짜 대박이라니까요<br>
+			(기자비밀공유 ㄱㄱ.
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			뭐가요?
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			뭐길래용
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			아니근데 방금,,,기자가,,,<br>
+			되게 다찬씨 노려보고가지않았어요,,?,,
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			기자가 갖고있는 비밀이 공개됩니다.
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			(ㅋㅋ
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			하 그런 여자 저도 싫거든요
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			하...나 ...... ㅋ
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			충격이죠
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			?;;
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			이거 유튜브 올리면 조회수 오백만은 찍는다....ㅋ
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			윤영씨..;;;; 우선은 저희끼리만 알고 있죠
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			난<br>
+			안보이는데
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			정보탭<br>
+			보삼
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			하... ㅋ
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			ㅇㅎ
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			뭐 이런일이,,,
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			저도 생각은 있으니 참지만
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			유튜브에도 복선 깔듯이만 하고.. 원래 이런건 일이 터진 다음에 공개해야<br>
+			성지순례온다구요
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			지금은 떡밥만 뿌려두죠 ~ ㅋ
+		</p>
+		<p class="player p20">
+			<b>system</b>
+			[ 유지나 ] SAN : 6 → 5
+		</p>
+		<p class="player p20">
+			<b>system</b>
+			[ 유지나 ] SAN : 5 → 4
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			대박이죠<br>
+			와~이런 사람이 다있냐 어떻게 전혀 몰랐네
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			정말 놀랍네용<br>
+			네요
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			◈ ◆◆◆ 장면을 종료합니다 ◆◆◆ ◈
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			2사이클 두번째<br>
+			장면 플레이어 : 서하빈<br>
+			등장인물 : 전원
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			2d6 <br>
+			<span class="diceroll">Insane : (2D6) ＞ 2[1,1] ＞ 2</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			어디에선가 뉴스가 들려온다. 게이트의 여파로 인해 일대가 쑥대밭이 되었다고….
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(머?<br>
+			(어디 근처래 큰일낫네,,,그치만 내집주변 아니면 신경안씀)<br>
+			(아까 다찬씨를 노려보던 기자가 수상하다, 헌터에게 왜 그런 악감정을? 혹시 다찬씨에게 &lt;원한&gt;이라도 있는거 아닐까?)<br>
+			(원한으로 조사.)
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			해보죠 ㅋ
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			2D6&gt;=5 원한 <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 9[4,5] ＞ 9 ＞ 성공</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			비밀 가져가주세용<br>
+			서하빈 이성 -1<br>
+			&lt;원한&gt;으로 공포판정.
+		</p>
+	</div>
+
+	<div class="tab t2">
+		<p class="player p20">
+			<b>system</b>
+			[ 서하빈 ] SAN : 3 → 2
+		</p>
+	</div>
+
+	<div class="tab t1">
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			2D6&gt;=5 원한 <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 6[2,4] ＞ 6 ＞ 성공</span><br>
+			(나랑 눈마주치면 비밀받는거다)<br>
+			아니,,,<br>
+			(세상에 이런일이?!)<br>
+			(하지만 말해도 아무도 믿어주지 않겠지,,,)
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			(^^)
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			저기,,다찬씨,,<br>
+			그,,방금 같이 얘기하셨던 기자분 있잖아요,,,
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			저한테 왜 그여자 얘기를 하세요
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(다찬이 정보공개해줌)(소근소근)<br>
+			아니 그게,,,그,,일단 들어보세요
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			안다찬 이성 -1<br>
+			&lt;원한&gt; 으로 공포판정.
+		</p>
+		<p class="player p20">
+			<b>system</b>
+			[ 안다찬 ] SAN : 3 → 2
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			2D6&gt;=8 원한 <br>
+			<span class="diceroll">Insane : (2D6&gt;=8) ＞ 6[3,3] ＞ 6 ＞ 실패</span><br>
+			아깝다
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			광기뽑끼이
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			ㅋㅋ<br>
+			이거비밀<br>
+			제가확산할수도잇나요?
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			확신ㅋㅋ<br>
+			확산ㅋ
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			ㅋㅋ<br>
+			윤영이랑 감정잇는데ㅋ
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			사람살려
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			음~ 그건 안될듯
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			아~ㅇㅋㅇㅋ
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			ㅎㅎ
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			다찬이도 공유받은 비밀이라 ㅎㅎ
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			이거,,어떡하죠?<br>
+			사람들한테 알리는게 나을까요,,?
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			음.. 여기 사람이 너무 많아서 오히려 퍼뜨리면 장내가 혼란해질지도 몰라요<br>
+			선빵치죠
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(?)
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			선빵
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(뭐임? 선빵칠 계획을 세우며)
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			(뭐야
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			◈ ◆◆◆ 장면을 종료합니다 ◆◆◆ ◈
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			2사이클 세번째<br>
+			장면 플레이어 : 차윤영<br>
+			등장인물 : 전원
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			2d6 <br>
+			<span class="diceroll">Insane : (2D6) ＞ 2[1,1] ＞ 2</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			어디에선가 뉴스가 들려온다. 게이트의 여파로 인해 일대가 쑥대밭이 되었다고….
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			아까 헌터 직원에 대해서 좀 캐보고 싶네요<br>
+			조사판정할래요
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			어케하나요
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			흠.<br>
+			직원들끼리 하는 얘기를 멀리서 엿들어볼게요 ?<br>
+			소리로 판정하겟습니다<br>
+			2D6&gt;=6 소리 <br>
+			<span class="diceroll">Insane : (2D6&gt;=6) ＞ 7[3,4] ＞ 7 ＞ 성공</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			저아직 굴리라고 안햇는데요
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			ㅠ.ㅠ<br>
+			그럼 무를게요 ㅠ.ㅠ
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			흠,,, 이런 공개된 장소에서 직원들끼리 비밀얘기를 할 것 같지는 않네요..
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			ㅠ.ㅠ<br>
+			그럼 2n년 갈고닦은 고인물 sns 경력으로<br>
+			직원의 것으로 보이는 sns를 캐볼게요<br>
+			미디어로 굴려도대나요
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			ㄱㄱ
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			2D6&gt;=5 미디어 <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 8[3,5] ＞ 8 ＞ 성공</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			비밀 가져갑시다<br>
+			&lt;효율&gt;로 공포판정.
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			2D6&gt;=6 효율 <br>
+			<span class="diceroll">Insane : (2D6&gt;=6) ＞ 6[3,3] ＞ 6 ＞ 성공</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			차윤영의 광기가 현재화됩니다.
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			ㅋㅋ<br>
+			◈ ◆◆◆ 장면을 종료합니다 ◆◆◆ ◈
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			2사이클 네번째<br>
+			장면 플레이어 : 유지나<br>
+			등장인물 : 전원
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			2d6 <br>
+			<span class="diceroll">Insane : (2D6) ＞ 6[1,5] ＞ 6</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			어두운 적색의 석양. 태양은 저물어가고, 하늘은 피처럼 붉다. 불안한 기분이 커져 간다.
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			벌써 해가 졌단 말야?<br>
+			하...<br>
+			살갑게 다가와준 헌터 A와 웃으며 대화해 비밀을 말하도록 유도할래요. 웃음으로 판정 가능한가요
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			아 ㅋ 그래요 ㅋ
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			2D6&gt;=5 웃음 <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 9[4,5] ＞ 9 ＞ 성공</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			비밀 가져가세요
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			전원과 공유할게요
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			ㅠ.ㅠ
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			헌터A의 비밀이 공개됩니다.
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			아니 등급 매기러 온건데 다들 왜이래!
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			아니,,<br>
+			집에 그냥 가면 안되겠지,,
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			...다른 아시는거 있으신 분
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			무슨 소리에요 하빈씨!<br>
+			이걸 알고있는건 우리뿐이니<br>
+			저희가 막아야죠w
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			그,,,<br>
+			다찬씨 혼자서도 충분하지않을까요?
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			말하고싶지만 말할수없어요
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			저기요.<br>
+			이런 데서 폭발이 나면<br>
+			헌터 이미지가 어떻게 되겠냐구요.<br>
+			제 돈줄은 어떻게 하냐구요
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			왜 저희한테 그러세요
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			우리모두 사명감을 가지고!!! 이 문제를 해결해야 한다고요
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			윤영씨 말이 옳습니다!!
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			음~ 뭐지 집 가고 싶은데
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			저기 그,,<br>
+			사실아까요,,,<br>
+			(기자비밀 뿌려요 ㅋ)
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			머길랭
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			기자의 비밀이 모두에게 알려집니다.<br>
+			&lt;원한&gt; 으로 공포판정.
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			2D6&gt;=7 원한 <br>
+			<span class="diceroll">Insane : (2D6&gt;=7) ＞ 6[2,4] ＞ 6 ＞ 실패</span>
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			2D6&gt;=8 원한 <br>
+			<span class="diceroll">Insane : (2D6&gt;=8) ＞ 7[2,5] ＞ 7 ＞ 실패</span><br>
+			꺄아아악
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			광기뽑끼이
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			여기서 무기써도되낭<br>
+			아냐
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			써도되긴함
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			아냐
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			뭐까지나봐<br>
+			ㅋㅋ
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			기자의 비밀이 세 명 이상에게 공개됐기에 클라이맥스 페이즈로 이동합니다.
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			아니네
+		</p>
+		<p class="player p11">
+			<b>유지나</b>
+			오호
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			◈◆◈◆ 클라이맥스 페이즈 ◈◆◈◆<br>
+			콰아아아아앙!!<br>
+			회장 한곳에서 폭발음이 들려옵니다.
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			와!
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			하하하하하하하!!!!<br>
+			이렇게 된 거 지금 다 터뜨리지 뭐!<br>
+			이딴 헬조선의 앞잡이 협회 따위 망해 버리라지!!!<br>
+			내 능력이 남의 스탯 보는 것만 있다고 생각하면 오산입니다! 아하하하!
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			와!
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			망해라 헬조선!!!
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			(ㄷㄷㄷ)
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(우와,,,
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			와!
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			협회장은 당황해하다가 협회 직원의 안내로 급히 회장에서 도망칩니다.
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			(빨리 카메라 꺼내 다찍어!!!
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			클라이맥스 전투를 시작합니다.
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(그냥 구경중w)
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			(ㅋㅋ)
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			전투에 는 【에너미 : 헌터A】,【에너미 : 헌터협 회 직원】,【에너미 : INBS 기자】,【에너미 : 등급 측정 장치】(x2) 가 참여합니다.
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			와!
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			각자 우클릭 주사위꺼내기해서<br>
+			안보이게 숨긴담에 플룻 정해주세요<br>
+			에너미 플룻은 이미 정해져있는 것 외에 플룻 공개되고 랜덤 굴릴게요<br>
+			플룻 다 정했으면 공개해주세요
+		</p>
+	</div>
+
+	<div class="tab t2">
+		<p class="player p20">
+			<b>system</b>
+			[ 안다찬 ] がダイスシンボルを公開。出目は 2 です。<br>
+			[ 유지나 ] がダイスシンボルを公開。出目は 1 です。<br>
+			[ 서하빈 ] がダイスシンボルを公開。出目は 2 です。
+		</p>
+	</div>
+
+	<div class="tab t1">
+		<p class="player p18">
+			<b>NPC 헌터 A</b>
+			1D6 <br>
+			<span class="diceroll">Insane : (1D6) ＞ 4</span>
+		</p>
+		<p class="player p22">
+			<b>NPC 헌터 협회 직원</b>
+			1D6 <br>
+			<span class="diceroll">Insane : (1D6) ＞ 2</span>
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			1D6 <br>
+			<span class="diceroll">Insane : (1D6) ＞ 1</span>
+		</p>
+		<p class="player p20">
+			<b>system</b>
+			[ 차윤영 ] がダイスシンボルを公開。出目は 3 です。
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			유지나, INBS기자가 버팅합니다!<br>
+			유지나, INBS 기자 HP -1<br>
+			헌터 협회 직원, 서하빈, 안다찬이 버팅합니다!
+		</p>
+		<p class="player p20">
+			<b>system</b>
+			[ 유지나 ] HP : 6 → 5
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			헌터 협회 직원, 서하빈, 안다찬 HP -1
+		</p>
+		<p class="player p20">
+			<b>system</b>
+			[ 안다찬 ] HP : 6 → 5<br>
+			[ 서하빈 ] HP : 6 → 5
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			차윤영과 등급 측정 장치가 버팅합니다!
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			(육감) #어빌 【위험감지】 서포트 ▶ 전투 중 당신이 버팅에 말려들었을 때 사용할 수 있다. 지정특기 판정에 성공하면 버팅으로 인한 데미지를 무효화할 수 있다.
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			육감 굴려주세요
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			2D6&gt;=5 육감 <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 6[3,3] ＞ 6 ＞ 성공</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			차윤영은 버팅에 의한 대미지를 무효화합니다.<br>
+			등급 측정 장치1 HP-1
+		</p>
+		<p class="player p20">
+			<b>system</b>
+			[ NPC INBS 기자 ] HP : 12 → 11
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			속도가 빠른 등급 측정 장치 2부터 시작합니다.
+		</p>
+		<p class="player p23">
+			<b>등급 측정 장치 2</b>
+			choice[안다찬,서하빈,차윤영,유지나] <br>
+			<span class="diceroll">Insane : (CHOICE[안다찬,서하빈,차윤영,유지나]) ＞ 안다찬</span>
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			저기요
+		</p>
+		<p class="player p23">
+			<b>등급 측정 장치 2</b>
+			안다찬을 공격합니다.<br>
+			2D6&gt;=5 (파괴) #어빌 【범위폭파】 서포트 ▶ 지원행동. 지정특기 판정에 성공할 경우 1D6을 굴려 홀수라면 현재 속도에서 +1, 짝수라면 현재 속도에서 -1의 지역을 폭파한 다. 폭파되는 속도에 있는 캐릭터는 전원 회피 판정을 한다. 대상은 회피판정에 실패 시 대미지 1점을 입고 현재 속도에서 +1을 한다. 이때 버팅 또한 적용된다. <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 6[3,3] ＞ 6 ＞ 성공</span>
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			개고수네
+		</p>
+		<p class="player p23">
+			<b>등급 측정 장치 2</b>
+			1D6 <br>
+			<span class="diceroll">Insane : (1D6) ＞ 5</span><br>
+			홀수가 나왔으니 현재 속도 +1 구역인 속도 6구역이 폭파됩니다.
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			속도 6구역에 인원 없음.
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			왜..왜저 공격하는척하세요<br>
+			무섭게
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			다음 속도인 헌터 A의 순서입니다.
+		</p>
+		<p class="player p18">
+			<b>NPC 헌터 A</b>
+			choice[안다찬,서하빈,차윤영,유지나] <br>
+			<span class="diceroll">Insane : (CHOICE[안다찬,서하빈,차윤영,유지나]) ＞ 차윤영</span>
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			꺄악
+		</p>
+		<p class="player p18">
+			<b>NPC 헌터 A</b>
+			이, 일단 도망치기 편하게 누구라도 공격해두는 게 좋겠지! (불안한 얼굴로 차윤영에게 공격을 시도합니다.)<br>
+			2D6&gt;=5 (협박) #어빌 【기본공격】 공격 ▶ 목표 1명을 선택해서 명중판정을 한다. 명중판정이 성공하고, 목표가 회피판정에 실패하면 1D6점 대미지. <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 5[1,4] ＞ 5 ＞ 성공</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			차윤영 회피 2d6 굴려주세요
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			2d6 <br>
+			<span class="diceroll">Insane : (2D6) ＞ 7[3,4] ＞ 7</span>
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			쌉고수
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			회피 성공.<br>
+			차윤영과 등급 측정 장치의 순서를 정하기위해 1d6 굴려봅시다
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			1d6 <br>
+			<span class="diceroll">Insane : (1D6) ＞ 6</span>
+		</p>
+		<p class="player p24">
+			<b>등급 측정 장치</b>
+			1d6 <br>
+			<span class="diceroll">Insane : (1D6) ＞ 2</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			차윤영의 선
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			기자 팰래
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			선언해주세요
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			기자한테 기본공격 할게요?
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			굴려주세요
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			2D6&gt;=5 (혼돈) #어빌 【기본공격】 공격 ▶ 목표 1명을 선택해서 명중판정을 한다. 명중판정이 성공하고, 목표가 회피판정에 실패하면 1D6점 대미지. <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 8[2,6] ＞ 8 ＞ 성공</span><br>
+			나 명중판정<br>
+			보정-2되는데<br>
+			앗그래도되네
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			쌉고수
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			2D6&gt;=5 회피  <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 2[1,1] ＞ 2 ＞ 펌블(판정실패。 덱에서 【광기】를 1장 획득)</span><br>
+			?
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			?
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			ㅋㅋ
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			ㅋㅋ
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			회피 실패. 대미지롤 굴려주세요
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			1d6 <br>
+			<span class="diceroll">Insane : (1D6) ＞ 6</span><br>
+			ㅁㅊ
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			INBS 기자 HP -6<br>
+			여기서 잠깐! 서하빈의 광기가 현재화됩니다.<br>
+			등급 측정 장치의 차례.
+		</p>
+		<p class="player p24">
+			<b>등급 측정 장치</b>
+			2D6&gt;=5 (파괴) #어빌 【범위폭파】 서포트 ▶ 지원행동. 지정특기 판정에 성공할 경우 1D6을 굴려 홀수라면 현재 속도에서 +1, 짝수라면 현재 속도에서 -1의 지역을 폭파한 다. 폭파되는 속도에 있는 캐릭터는 전원 회피 판정을 한다. 대상은 회피판정에 실패 시 대미지 1점을 입고 현재 속도에서 +1을 한다. 이때 버팅 또한 적용된다. <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 8[3,5] ＞ 8 ＞ 성공</span><br>
+			1D6  <br>
+			<span class="diceroll">Insane : (1D6) ＞ 4</span><br>
+			현재 속도에서 -1을 한 속도 2의 지역이 폭파됩니다.
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			헌터 직원, 서하빈, 안다찬 전원 회피판정.
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			2d6 <br>
+			<span class="diceroll">Insane : (2D6) ＞ 4[1,3] ＞ 4</span><br>
+			하..
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			2d6 <br>
+			<span class="diceroll">Insane : (2D6) ＞ 8[2,6] ＞ 8</span>
+		</p>
+		<p class="player p22">
+			<b>NPC 헌터 협회 직원</b>
+			2D6&gt;=6 회피 <br>
+			<span class="diceroll">Insane : (2D6&gt;=6) ＞ 6[2,4] ＞ 6 ＞ 성공</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			안다찬 회피 실패
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			아 ㅁㅊ네 올라가서 버팅함?
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			안다찬 HP -1 속도 +1
+		</p>
+		<p class="player p20">
+			<b>system</b>
+			[ 안다찬 ] HP : 5 → 4
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			안다찬의 속도가 3이 되었습니다.<br>
+			차윤영, 등급 측정 장치, 안다찬의 버팅!
+		</p>
+	</div>
+
+	<div class="tab t2">
+		<p class="player p20">
+			<b>system</b>
+			[ 안다찬 ] HP : 4 → 3
+		</p>
+	</div>
+
+	<div class="tab t1">
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			위험감지 쓸래
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			굴려주세요
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			(육감) #어빌 【위험감지】 서포트 ▶ 전투 중 당신이 버팅에 말려들었을 때 사용할 수 있다. 지정특기 판정에 성공하면 버팅으로 인한 데미지를 무효화할 수 있다.<br>
+			2D6&gt;=5 육감 <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 9[3,6] ＞ 9 ＞ 성공</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			차윤영 버팅 대미지 없음.<br>
+			등급 측정 장치 HP -1<br>
+			속도 3이 된 안다찬의 턴
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			흠..<br>
+			저는 회상을 먼저 하겟읍니다..<br>
+			기자를 공격할거구요..
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			그럼 대미지가 아니라 명중판정에 수정하시나요?
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			네..
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			넵
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			비밀공개는 말로하나요?
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			네.
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			사실. 저는 오늘 괴한이 침입할거라는 쪽지를 받앗습니다.<br>
+			그리고 그게 누군지 알게 되엇으니 기자를 조지겟습니다<br>
+			2D6&gt;=5 (미디어) #어빌 【저격】 공격 ▶ 몹 1개체를 목표로 선택하여 명중판정을 한다. 명중판정이 성공하면 목표에게 2D6점의 데미지를 입힌다. <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 8[3,5] ＞ 8 ＞ 성공</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			회상이 너무 부실하지않나요?
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			ㅠ.ㅠ<br>
+			ㅠ.ㅠ<br>
+			아아..
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			누군지 알게되었다는거 치곤 누구라는 말이 없네요 ㅋ
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			때는 이 시험장에 들어오기 전으로 돌아갑니다..<br>
+			오늘 무슨 등급을 받게될까 두근두근한 마음으로 회장에 들어왔는데?<br>
+			누가 지나가면서 어깨빵을 팍! 치는거예요 기분이 나빠서 홱 돌아봤는데<br>
+			아니글쎄 아무도 없는게 아니겠습니까<br>
+			그리고 폰을 보려고 주머니에 손을 넣엇는데<br>
+			뭔 바스락거리는게 있어서 봤는데!<br>
+			오늘 괴한이 나타난다는 쪽지에 발신인 ~이 사건을 막고 싶은 사람~ 이라고 써잇는거예요<br>
+			아니 대한민국 헌터로 태어나서 어떻게 이걸 보고 그냥 지나칠 수가 있겠습니까<br>
+			그래서 괴한이 누군가 하.. 이걸 막 떠벌리고 다닐 수도 없고 윤영씨한테만 슬쩍 말해서 막 둘러보는데<br>
+			아니글쎄 기자가 폭탄테러범?!<br>
+			가만 볼 수가 없더라구요 하,,<br>
+			됏나요<br>
+			아닌가요
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			ㅋ<br>
+			주사위 굴려봅시다
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			2D6&gt;=5 (미디어) #어빌 【저격】 공격 ▶ 몹 1개체를 목표로 선택하여 명중판정을 한다. 명중판정이 성공하면 목표에게 2D6점의 데미지를 입힌다. <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 7[2,5] ＞ 7 ＞ 성공</span><br>
+			ㅠ.ㅠ<br>
+			왜다성공하는데
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			2D6&gt;=5 회피  <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 7[2,5] ＞ 7 ＞ 성공</span>
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			저<br>
+			기자에게<br>
+			부적
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			아 ㅋ 써보세요
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			부적..템이라 그냥 쓰는거죠?
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			네
+		</p>
+		<p class="player p20">
+			<b>system</b>
+			[ 안다찬 ] 부적 : 2 → 1
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			네네 다시굴려주세요<br>
+			4띄워주세요 지엠님
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			2D6&gt;=5 회피  <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 8[4,4] ＞ 8 ＞ 성공</span>
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			저기
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			ㅋㅋㅋ
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			부적또써도돼요?
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			ㅋㅋ
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			4씩 두개 띄워드렷어요
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			진짜존나웃겨
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			미친사람아냐이거
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			ㅋㅋ아니 뭐 아이템 쓰는건 자유입니다만
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			기자보고한말임<br>
+			지엠보고한말아님<br>
+			넘어가요..네네...
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			다음 턴 누가먼저 할지 판정해봅시다<br>
+			서하빈, 헌터 직원 1d6 굴려주세요
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			1d6 <br>
+			<span class="diceroll">Insane : (1D6) ＞ 3</span>
+		</p>
+		<p class="player p22">
+			<b>NPC 헌터 협회 직원</b>
+			1D6 <br>
+			<span class="diceroll">Insane : (1D6) ＞ 1</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			서하빈 선턴
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			그럼 저는,,,,<br>
+			역시 기자에게<br>
+			2D6&gt;=5 (절단) #어빌 【기본공격】 공격 ▶ 목표 1명을 선택해서 명중판정을 한다. 명중판정이 성공하고, 목표가 회피판정에 실패하면 1D6점 대미지. <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 6[2,4] ＞ 6 ＞ 성공</span>
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			2D6&gt;=5 회피 <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 9[4,5] ＞ 9 ＞ 성공</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			헌터 직원의 터<br>
+			ㄴ
+		</p>
+		<p class="player p22">
+			<b>NPC 헌터 협회 직원</b>
+			회상장면 연출하고 명중판정에 씁니다.
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			npc님 그만하세요<br>
+			마이묵엇다아이가
+		</p>
+		<p class="player p22">
+			<b>NPC 헌터 협회 직원</b>
+			하,,, 저는 조직에 회의감을 가지고 있습니다. 지금의 협회는 너무 강압적이죠. 타인의 정보를 볼 수 있는 각성자를 거의 납치 감금하다시피 하여 그의 기술을 빼 내어선 직원이고 각성자고 죄다 갈아 버리다니..... ... 이래서 헬조선은 안 됩니다. ....<br>
+			저의 【진정한 사명】은 협회에 엿을 먹이고 협회를 때려치운 뒤 자유를 만끽하는 것입니다.<br>
+			모두 저를 응원 바랍니다!<br>
+			2D6&gt;=9(병기) #어빌 【중화기】 공격 ▶ 전투에 참가한 당신 이외의 캐릭터 전원을 목표로 선택하여 명중판정을 한다. 명중판정이 성공하면 목표는 각자 회피판정을 한다. 회피판정이 실패한 목표에게 1D6+2점의 데미지를 입힌다. 이 효과는 한 전투당 1회만에 사용할 수 있다. <br>
+			<span class="diceroll">Insane : (2D6&gt;=9) ＞ 3[1,2] ＞ 3 ＞ 실패</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			아 ㅋ 명중판정 보너스 들어가서 성공합니다<br>
+			전원, 회피 판정.
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			2d6 <br>
+			<span class="diceroll">Insane : (2D6) ＞ 10[5,5] ＞ 10</span>
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			2d6&gt;=6 <br>
+			<span class="diceroll">Insane : (2D6&gt;=6) ＞ 8[3,5] ＞ 8 ＞ 성공</span>
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			전 2d5인가요??
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			2d6 <br>
+			<span class="diceroll">Insane : (2D6) ＞ 5[2,3] ＞ 5</span>
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			ㄴㄴ
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			6인가 ㅎㅎ<br>
+			2d6 <br>
+			<span class="diceroll">Insane : (2D6) ＞ 4[1,3] ＞ 4</span><br>
+			꺄
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			2d6해서 5이상
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			유지나, 차윤영 회피 실패
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			꺄~
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			어,..,.,.<br>
+			살사람?
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			나
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			아이템 쓸거면 선언하고 써주세요
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			아ㅡㅡ 텍스트 겹쳐서 안보여
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			지나한테 부적쓰겟읍니다
+		</p>
+		<p class="player p20">
+			<b>system</b>
+			[ 안다찬 ] 부적 : 1 → 0
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			회피판정도 무기 사용 가능?
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			감사해요 하하
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			유지나, 재굴림 해주세요<br>
+			ㅇㅇ
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			2d6 <br>
+			<span class="diceroll">Insane : (2D6) ＞ 7[3,4] ＞ 7</span>
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			저무기슬게요
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			유지나 회피 성공.
+		</p>
+		<p class="player p20">
+			<b>system</b>
+			[ 차윤영 ] 무기 : 1 → 0
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			쓰세요
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			다시굴림<br>
+			2d6 <br>
+			<span class="diceroll">Insane : (2D6) ＞ 3[1,2] ＞ 3</span><br>
+			ㅋㅋ
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			차윤영 회피 실패.
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			이건좀?
+		</p>
+		<p class="player p22">
+			<b>NPC 헌터 협회 직원</b>
+			1D6+2  <br>
+			<span class="diceroll">Insane : (1D6+2) ＞ 3[3]+2 ＞ 5</span>
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			아아아아악
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			차윤영 HP -5
+		</p>
+		<p class="player p11">
+			<b>유지나</b>
+			미친죽는거아냐
+		</p>
+	</div>
+
+	<div class="tab t2">
+		<p class="player p20">
+			<b>system</b>
+			[ 차윤영 ] HP : 6 → 1
+		</p>
+	</div>
+
+	<div class="tab t1">
+		<p class="player p12">
+			<b>◆</b>
+			다음 순서를 정하기 위해 유지나와 기자가 1d6을 굴려봅시다
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			1d6 <br>
+			<span class="diceroll">Insane : (1D6) ＞ 5</span>
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			1d6 <br>
+			<span class="diceroll">Insane : (1D6) ＞ 3</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			유지나 선턴
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			음! 기자 공격하겠습니다
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			판정 해주세요
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			2D6&gt;=5 (사격) #어빌 【저격】 공격 ▶  몹 1개체를 목표로 선택하여 명중판정을 한다. 명중판정이 성공하면 목표에게 2D6점의 데미지를 입힌다. <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 7[3,4] ＞ 7 ＞ 성공</span>
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			2D6&gt;=5 회피  <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 8[3,5] ＞ 8 ＞ 성공</span>
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			아효 저 씹새끼!
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			기자의 턴
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			choice[안다찬,서하빈,차윤영,유지나] <br>
+			<span class="diceroll">Insane : (CHOICE[안다찬,서하빈,차윤영,유지나]) ＞ 안다찬</span><br>
+			안다찬을 공격합니다.<br>
+			2D6&gt;=5 (파괴) #어빌 【기본공격】 공격 ▶ 목표 1명을 선택해서 명중판정을 한다. 명중판정이 성공하고, 목표가 회피판정에 실패하면 1D6점 대미지. <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 11[5,6] ＞ 11 ＞ 성공</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			회피 굴려주세요
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			2d6 <br>
+			<span class="diceroll">Insane : (2D6) ＞ 7[1,6] ＞ 7</span><br>
+			휴
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			회피 성공.<br>
+			1라운드 종료<br>
+			2라운드<br>
+			다시 등급 측정 장치의 순서로 돌아갑니다.
+		</p>
+		<p class="player p23">
+			<b>등급 측정 장치 2</b>
+			2D6&gt;=5 (파괴) #어빌 【범위폭파】 서포트 ▶ 지원행동. 지정특기 판정에 성공할 경우 1D6을 굴려 홀수라면 현재 속도에서 +1, 짝수라면 현재 속도에서 -1의 지역을 폭파한다.  <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 2[1,1] ＞ 2 ＞ 펌블(판정실패。 덱에서 【광기】를 1장 획득)</span><br>
+			?
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			펌블로 자동실패.
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			ㅋㅋㅋ
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			헌터A의 턴.
+		</p>
+		<p class="player p18">
+			<b>NPC 헌터 A</b>
+			아차, 나는 폭탄이 터지기 전에 이만~<br>
+			자발적 탈락을 합니다.
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			원하시면 자발적 탈락을 막을 수 있습니다.<br>
+			헌터A는 유유히 싸움판에서 떠납니다.<br>
+			헌터A 자발적 탈락.<br>
+			차윤영의 턴
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			기자패<br>
+			기본공격쓸게요
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			굴려주세요
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			2D6&gt;=5 (혼돈) #어빌 【기본공격】 공격 ▶ 목표 1명을 선택해서 명중판정을 한다. 명중판정이 성공하고, 목표가 회피판정에 실패하면 1D6점 대미지. <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 4[1,3] ＞ 4 ＞ 실패</span><br>
+			ㅋ..
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			공격 실패. 등급 측정 장치의 턴
+		</p>
+		<p class="player p24">
+			<b>등급 측정 장치</b>
+			2D6&gt;=5 (파괴) #어빌 【범위폭파】 서포트 ▶ 지원행동. 지정특기 판정에 성공할 경우 1D6을 굴려 홀수라면 현재 속도에서 +1, 짝수라면 현재 속도에서 -1의 지역을 폭파한다.  <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 10[4,6] ＞ 10 ＞ 성공</span><br>
+			폭파되는 속도에 있는 캐릭터는 전원 회피 판정을 한다. 대상은 회피판정에 실패 시 대미지 1점을 입고 현재 속도에서 +1을 한다. 이때 버팅 또한 적용된다.<br>
+			1d6 <br>
+			<span class="diceroll">Insane : (1D6) ＞ 2</span><br>
+			현재 속도 -1 지역인 속도 2 지역이 폭파됩니다.
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			속도 2에 있는 서하빈, 헌터 직원 회피 판정.
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			2d6&gt;=6 <br>
+			<span class="diceroll">Insane : (2D6&gt;=6) ＞ 2[1,1] ＞ 2 ＞ 펌블(판정실패。 덱에서 【광기】를 1장 획득)</span><br>
+			?<br>
+			??
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			ㅋㅋ<br>
+			차윤영과 유지나의 광기가 현재화됩니다.
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			헥
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			아 ㅋㅋ
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			유지나는 랜덤 PC중 한명을 선택해 2점 대미지를 입혀주세요.
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			choice[1,2,3] <br>
+			<span class="diceroll">Insane : (CHOICE[1,2,3]) ＞ 2</span><br>
+			pc2 누구지
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			전데요?
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			서하빈이요
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			....
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			난리낫다
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			ㄹㅇ
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			하빈이 공격할게여..
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			님아 폭발데미지는<br>
+			언제받음
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			아맞다
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			광기뽑고 폭발데미지임<br>
+			아니면반대임
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			아니너네다너덜너덜하네..
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			흠 일단 폭발뎀부터
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			사실 그게 그거같긴해요?
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			처리할게요<br>
+			ㅋㅋ
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			아니나근데<br>
+			지나한테맞으면 탈락임<br>
+			화이팅!
+		</p>
+		<p class="player p20">
+			<b>system</b>
+			[ 서하빈 ] HP : 5 → 3
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			서하빈 폭발 대미지로 HP -1<br>
+			유지나의 공격으로 추가 HP -2
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			광기 진행중이죠?
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			아 ㅋ
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			ㅁㅊ네
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			광기또나오죠?
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			그럼 ㅈㅁㅋㅋ
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			맞아서?
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			우린끝낫어
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			폭발로 -2고
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			폭발 대미지로 2점 얻었고요
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			우린끝낫어
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			지나한테 -3인데
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			서하빈의 광기가 현재화됩니다.
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			광기까지나옴
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			우린끝낫어
+		</p>
+		<p class="player p20">
+			<b>system</b>
+			[ 서하빈 ] HP : 3 → -1
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			?
+		</p>
+		<p class="player p20">
+			<b>system</b>
+			[ 서하빈 ] HP : -1 → 0<br>
+			[ 서하빈 ] HP : 0 → 1<br>
+			[ 서하빈 ] HP : 1 → 0
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			ㅎㅎ
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			전에 있는 광기는 끝나서 유지나의 대미지로는 2댐만 입습니다<br>
+			어디가 하빈아
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			아나
+		</p>
+		<p class="player p20">
+			<b>system</b>
+			[ 서하빈 ] HP : 0 → 1
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			휴 ㅋ
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			ㅋㅋ
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			쉴수잇을줄.
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			ㄴㄴㅋ
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(너덜너덜~ㅋ)
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			그럼 이제 다찬이턴
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			기자때려야죠..<br>
+			2D6&gt;=5 (미디어) #어빌 【저격】 공격 ▶ 몹 1개체를 목표로 선택하여 명중판정을 한다. 명중판정이 성공하면 목표에게 2D6점의 데미지를 입힌다. <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 7[3,4] ＞ 7 ＞ 성공</span><br>
+			피하지말자
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			2d6&gt;=5 회피 <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 7[1,6] ＞ 7 ＞ 성공</span>
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			아오
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			서하빈 턴
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			전장이동<br>
+			내가쓴다<br>
+			(-) #어빌 【전장이동】 서포트 ▶ 지원행동. 이 어빌리티를 사용하면 전투에 참가한 캐릭터 전원은 다음 라운드의 [라운드 시작]에 플롯을 한다.
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			다음 라운드 시작때 플룻 다시 굴릴게요<br>
+			헌터 직원 턴
+		</p>
+		<p class="player p22">
+			<b>NPC 헌터 협회 직원</b>
+			하, 다 필요 없어! 나는 여기를 때려치고 나가겠다! 잘 있어라! (문을 박차고 나가려고 합니다.)<br>
+			자발적인 탈락을 합니다.
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			원하시면 방해가 가능합니다.<br>
+			유지나 턴<br>
+			헌터 직원은 화가나서 전투에서 빠져나갑니다.
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			기자 공격할게요
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			굴려주세요
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			2D6&gt;=5 (사격) #어빌 【저격】 공격 ▶  몹 1개체를 목표로 선택하여 명중판정을 한다. 명중판정이 성공하면 목표에게 2D6점의 데미지를 입힌다. <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 5[2,3] ＞ 5 ＞ 성공</span>
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			2D6&gt;=5 회피 <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 7[2,5] ＞ 7 ＞ 성공</span>
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			아휴
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			choice[안다찬,서하빈,차윤영,유지나] <br>
+			<span class="diceroll">Insane : (CHOICE[안다찬,서하빈,차윤영,유지나]) ＞ 서하빈</span><br>
+			서하빈을 공격합니다<br>
+			2D6&gt;=5 (파괴) #어빌 【기본공격】 공격 ▶ 목표 1명을 선택해서 명중판정을 한다. 명중판정이 성공하고, 목표가 회피판정에 실패하면 1D6점 대미지. <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 4[1,3] ＞ 4 ＞ 실패</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			ㅋㅋ공격실패<br>
+			2라운드 끝.<br>
+			새로 속도 플룻해주세요<br>
+			등급측정장치의 속도 플룻은 고정이기에 기자 속도만 이동합니다.<br>
+			플룻 하셨으면 공개해주세요
+		</p>
+		<p class="player p20">
+			<b>system</b>
+			[ 차윤영 ] がダイスシンボルを公開。出目は 2 です。
+		</p>
+	</div>
+
+	<div class="tab t2">
+		<p class="player p20">
+			<b>system</b>
+			[ 서하빈 ] がダイスシンボルを公開。出目は 2 です。<br>
+			[ 유지나 ] がダイスシンボルを公開。出目は 4 です。<br>
+			[ 안다찬 ] がダイスシンボルを公開。出目は 1 です。
+		</p>
+	</div>
+
+	<div class="tab t1">
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			1D6 <br>
+			<span class="diceroll">Insane : (1D6) ＞ 3</span>
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			이럴수가<br>
+			위험감지 굴리게해주십시오
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			굴려보세요
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			(육감) #어빌 【위험감지】 서포트 ▶ 전투 중 당신이 버팅에 말려들었을 때 사용할 수 있다. 지정특기 판정에 성공하면 버팅으로 인한 데미지를 무효화할 수 있다.<br>
+			2D6&gt;=5 육감 <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 6[1,5] ＞ 6 ＞ 성공</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			차윤영 버팅으로 인한 대미지 없음.<br>
+			서하빈 버팅으로 HP -1<br>
+			서하빈 탈락.
+		</p>
+		<p class="player p20">
+			<b>system</b>
+			[ 서하빈 ] 진통제 : 1 → 0
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			탈락 직전에서 살아돌아온 서하빈...
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			탈락취소
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			ㅋㅋ
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			등급 측정 장치와 기자가 버팅합니다.
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			죽은정도로 내가 죽을거라고 생각했나?
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			등급 측정 장치, 기자 HP -1<br>
+			속도가 높은 등급 측정 장치 2의 턴
+		</p>
+		<p class="player p23">
+			<b>등급 측정 장치 2</b>
+			2D6&gt;=5 (파괴) #어빌 【범위폭파】 서포트 ▶ 지원행동. 지정특기 판정에 성공할 경우 1D6을 굴려 홀수라면 현재 속도에서 +1, 짝수라면 현재 속도에서 -1의 지역을 폭파한 다.  <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 6[1,5] ＞ 6 ＞ 성공</span><br>
+			폭파되는 속도에 있는 캐릭터는 전원 회피 판정을 한다. 대상은 회피판정에 실패 시 대미지 1점을 입고 현재 속도에서 +1을 한다. 이때 버팅 또한 적용된다.<br>
+			1d6  <br>
+			<span class="diceroll">Insane : (1D6) ＞ 1</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			현재 속도 +1인 속도 6 지역을 폭파합니다.<br>
+			속도 6에 존재하는 사람 없음.<br>
+			유지나의 턴
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			기자 공격합니다<br>
+			2D6&gt;=5 (사격) #어빌 【저격】 공격 ▶  몹 1개체를 목표로 선택하여 명중판정을 한다. 명중판정이 성공하면 목표에게 2D6점의 데미지를 입힌다. <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 9[4,5] ＞ 9 ＞ 성공</span>
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			2D6&gt;=7 회피  <br>
+			<span class="diceroll">Insane : (2D6&gt;=7) ＞ 10[4,6] ＞ 10 ＞ 성공</span>
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			씹새끼
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			제맘대로 등급 측정 장치부터 하겠습니다
+		</p>
+		<p class="player p24">
+			<b>등급 측정 장치</b>
+			2D6&gt;=5 (파괴) #어빌 【범위폭파】 서포트 ▶ 지원행동. 지정특기 판정에 성공할 경우 1D6을 굴려 홀수라면 현재 속도에서 +1, 짝수라면 현재 속도에서 -1의 지역을 폭파한 다.  <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 5[2,3] ＞ 5 ＞ 성공</span><br>
+			폭파되는 속도에 있는 캐릭터는 전원 회피 판정을 한다. 대상은 회피판정에 실패 시 대미지 1점을 입고 현재 속도에서 +1을 한다. 이때 버팅 또한 적용된다.<br>
+			1d6 <br>
+			<span class="diceroll">Insane : (1D6) ＞ 6</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			속도 2의 지역을 폭파합니다.<br>
+			서하빈, 차윤영 회피판정.
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			꺄악<br>
+			2d6 <br>
+			<span class="diceroll">Insane : (2D6) ＞ 11[5,6] ＞ 11</span>
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			2d6&gt;=6 <br>
+			<span class="diceroll">Insane : (2D6&gt;=6) ＞ 7[1,6] ＞ 7 ＞ 성공</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			둘 다 회피 성공.<br>
+			기자의 턴
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			choice[안다찬,서하빈,차윤영,유지나] <br>
+			<span class="diceroll">Insane : (CHOICE[안다찬,서하빈,차윤영,유지나]) ＞ 유지나</span><br>
+			유지나를 공격합니다.<br>
+			2D6&gt;=5 (파괴) #어빌 【기본공격】 공격 ▶ 목표 1명을 선택해서 명중판정을 한다. 명중판정이 성공하고, 목표가 회피판정에 실패하면 1D6점 대미지. <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 10[4,6] ＞ 10 ＞ 성공</span>
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			2d6 <br>
+			<span class="diceroll">Insane : (2D6) ＞ 7[3,4] ＞ 7</span><br>
+			무기 사용 선언합니다!
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			쓰고 재굴림 해주세요
+		</p>
+		<p class="player p20">
+			<b>system</b>
+			[ 유지나 ] 무기 : 1 → 0
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			2d6 <br>
+			<span class="diceroll">Insane : (2D6) ＞ 10[5,5] ＞ 10</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			회피 성공.
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			고수 ㅋ
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			z
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			서하빈과 차윤영.. 선턴 판정을 위해 1d6 굴려봅시다
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			1d6 <br>
+			<span class="diceroll">Insane : (1D6) ＞ 1</span><br>
+			주사위꼬라지가
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			1d6 <br>
+			<span class="diceroll">Insane : (1D6) ＞ 2</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			차윤영 선턴
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			하..<br>
+			이젠 죽이고 싶습니다<br>
+			기자<br>
+			기본공격.......할게요 ..
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			판정 굴려주세요
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			2D6&gt;=5 (혼돈) #어빌 【기본공격】 공격 ▶ 목표 1명을 선택해서 명중판정을 한다. 명중판정이 성공하고, 목표가 회피판정에 실패하면 1D6점 대미지. <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 7[3,4] ＞ 7 ＞ 성공</span>
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			2D6&gt;=7 회피 <br>
+			<span class="diceroll">Insane : (2D6&gt;=7) ＞ 9[3,6] ＞ 9 ＞ 성공</span>
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			이 금주사위 뭐냐고
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			서하빈 턴
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			기자에게 기본공격합니다
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			굴려봅시다
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			2D6&gt;=5 (절단) #어빌 【기본공격】 공격 ▶ 목표 1명을 선택해서 명중판정을 한다. 명중판정이 성공하고, 목표가 회피판정에 실패하면 1D6점 대미지. <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 4[2,2] ＞ 4 ＞ 실패</span><br>
+			엥?
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			실화인가요
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			많이아픈가봐
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			HP나 SAN 까서 재굴림판정 가능하긴 하거든요<br>
+			필요하시면 선언해주세요
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			산치<br>
+			까보자
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			ㅋㅋ
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			뭐든해봐!
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			그래 까고 해보자
+		</p>
+		<p class="player p20">
+			<b>system</b>
+			[ 서하빈 ] SAN : 2 → 1
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			다시 기자한테 기본공격
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			굴려봅시다
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			2D6&gt;=5 (절단) #어빌 【기본공격】 공격 ▶ 목표 1명을 선택해서 명중판정을 한다. 명중판정이 성공하고, 목표가 회피판정에 실패하면 1D6점 대미지. <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 5[2,3] ＞ 5 ＞ 성공</span><br>
+			진짜 주사위실화냐
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			2D6&gt;=7 회피  <br>
+			<span class="diceroll">Insane : (2D6&gt;=7) ＞ 7[2,5] ＞ 7 ＞ 성공</span>
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			ㅁㅊ
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			젠장~
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			회피 xx새끼
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			진짜에바다
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			저기기자도
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			기자가 사실 신
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			산치까고다시굴리게해
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			ㅋㅋㅋㅋ
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			ㅋㅋ
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			쟤가왜까
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			ㅋㅋ
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			ㅋㅋ
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			얘들아 기자 6으로 보내자<br>
+			ㅋ
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			아니주사위좀 어케해봐
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			그래 ㅋㅋ
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			ㅋㅋ
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			그래좀<br>
+			어케해봐
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			아 ㅋ
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			진작에이랫어야하는거아닌지
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			다찬이 해보자 ㅋ
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			ㄹㅇ
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			ㅋㅋ<br>
+			아 ㅈㄴ웃겨
+		</p>
+		<p class="player p11">
+			<b>유지나</b>
+			1라끝날때부터
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			기자 ㄱㄱ
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			감이안조앗슴
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			2D6&gt;=5 (미디어) #어빌 【저격】 공격 ▶ 몹 1개체를 목표로 선택하여 명중판정을 한다. 명중판정이 성공하면 목표에게 2D6점의 데미지를 입힌다. <br>
+			<span class="diceroll">Insane : (2D6&gt;=5) ＞ 7[3,4] ＞ 7 ＞ 성공</span>
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			아니
+		</p>
+		<p class="player p21">
+			<b>NPC INBS 기자</b>
+			2D6&gt;=10 회피 <br>
+			<span class="diceroll">Insane : (2D6&gt;=10) ＞ 5[1,4] ＞ 5 ＞ 실패</span>
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			한명빼곤 성공한사람이없어 공격을
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			아니내가 2d6짜리 어빌을가져왓는데 안번도 때려보질못햇다고<br>
+			2d6 <br>
+			<span class="diceroll">Insane : (2D6) ＞ 7[3,4] ＞ 7</span>
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			이제써보자
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			뒤져라
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			저도저격가져왓는데한대도못때렷어요
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			와죽엇다죽엇다
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			뭔어빌인데요
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			저격
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			다찬이랑똑같은거
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			어빌좀서보세요<br>
+			제가 안넣어드렷나요?
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			아니썻는데쟤가다피하잖아씨발<br>
+			씨발씨발씨발
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			ㅋㅋ
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			아니 어빌설명을<br>
+			써보라고 ㅋ
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			머임 위에<br>
+			성공뜬거아냐?
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			능력묘사하라는건가?
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			GM을 만족시켜봐
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			아 글네<br>
+			기본공격인줄 ㅈㅅ
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			GM이 이제<br>
+			기자못죽이게함
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			ㅋㅋ<br>
+			너무못때려서
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			하,, 힘들어서 잘못봄
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			ㅋㅋ
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			기본공격인줄알앗나봐<br>
+			ㅠ.ㅠ
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			님도힘들죠
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			ㅋㅋ<br>
+			기자 HP -7
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			죽어
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			죽어어엇
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			기자죽어
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			죽어어엇
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			탈락시켜<br>
+			아니 COC인줄아나봐
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			기자가 탈락하였습니다.
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			크~
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			전투를 종료하나요?
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			저 장치는
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			choice[기자갈기갈기찍어죽이기,기자분쇄시키기] <br>
+			<span class="diceroll">Insane : (CHOICE[기자갈기갈기찍어죽이기,기자분쇄시키기]) ＞ 기자갈기갈기찍어죽이기</span>
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			어 기자탈락하면<br>
+			전투종료임?
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			때리면 터져요?
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			네
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			종료해 나죽어
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			ㅋ
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			종료해ㅋㅋ
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			ㅋㅋㅋㅋ
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			종료하자.
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			ㅃㄹ해
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			ㅋㅋㅋ
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			클라이맥스 전투가 종료됩니다.
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			끗긋끗
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			◈◆◆◆ 장면을 종료합니다 ◆◆◆◈
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>>
+			와~~~<br>
+			힘든 결투였어 (한대도 못때렸지만 ㅅㅂ)
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(나도 ㅋ)
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			브금진짜웃음벨이네
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			기자는 안다찬의 공격을 맞고 기절하여 쓰러집니다.<br>
+			기자가 기절하자, 기자의 힘에 연결되어 있던 등급측정장치, 폭탄들이 이내 작동 을 멈춥니다.
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			다찬이 짱!
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			ㅋㅋ
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			엘사다찬~
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			오,,,~
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			아 ㅈㄴ웃겨
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			회장을 둘러보면 폭파된 흔적 때문에 여기저기 완전 엉망진창입니다.
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(제 피랑 산치가 더난리임)
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			뒤늦게 등장한 협회장은 뒷목을 잡으면서 기자와 헌터A를 연행해 갑니다.
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			헌터A 도망간거 아니였냐구
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			(협회장 이새끼도 잡아가야하는거 아냐?
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			ㅋㅋ
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			여러분은 협회장의 비밀을 알고있나요?
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			네
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			네ㅋㅋ
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			여기서 퍼트릴 수 있습니다 ㅋ
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(ㄱㄴㄲ 저색)
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			퍼뜨려버려요!
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			확산시켜<br>
+			정보확산해
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			동.네.사람들
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			ww
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			확산은 이제 고농도에서 저농도로 용질이 이동하는 현상으로
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(윤영이가 생방하지않을까)
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			ㄷ
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			글쵸?
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			하자
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			협회장의 비밀이 퍼지자, 회장에 있던 진짜 기자가 그것을 듣고 곧 특종으로 띄워 버립니다.
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			진짜기자
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			협회장은 바로 경질되어 대한민국 전체를 대상으로 한 엄청난 사기꾼이란 타이틀을 받으며 구속됩니다.
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(REAL 기자)
+		</p>
+		<p class="player p9">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/9958684B5F902CBB35"> 차윤영 : </b>
+			[LIVE] 헌터협회장의 충격적인 비밀, 여기에서 폭로합니다....!! (실제 상황)
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			그리고 아마도 새로운 협회장이 다시 올라올 것입니다.
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(아 ㅅㅂㅋㅋ)
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			헌터 등급 시험은 취소되고 다시 열릴지 말지는 모르겠네요.
+		</p>
+		<p class="player p5">
+			<b><img src='https://t1.daumcdn.net/cfile/tistory/99217D365F901EC424'> 안다찬 : </b>
+			젠장~ 자칭헌터 많겟네
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			이후 여러분들은 다시 평온하게 지낼 수도, 위험한 헌터 일을 계속 해나갈 수도 있겠죠.<br>
+			우당탕탕 폭탄 테러에서 벗어난 것을 축하합니다!
+		</p>
+		<p class="player p1">
+			<b><img src="https://t1.daumcdn.net/cfile/tistory/994787365F901EC42F"> 서하빈 : </b>
+			(일단 집가서 요양좀)
+		</p>
+		<p class="player p11">
+            <b><img src='https://t1.daumcdn.net/cfile/tistory/999255365F901EC431'> 유지나 : </b>
+			하~ 힘들었어
+		</p>
+		<p class="player p12">
+			<b>◆</b>
+			엔딩 : 정의 구현?
+		</p>
+	</div>
+</body>
+</html>
